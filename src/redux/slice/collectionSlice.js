@@ -37,6 +37,14 @@ export const clearReduxStore = createAsyncThunk('clearReduxStore', async (data, 
     return rejectWithValue(err.message || 'Error');
   }
 });
+
+export const clearCollectionDay = createAsyncThunk('clearCollectionDay', async (data, { rejectWithValue }) => {
+  try {
+    return data;
+  } catch (err) {
+    return rejectWithValue(err.message || 'Error');
+  }
+});
 export const collectionSlice = createSlice({
   name: 'collectionSlice',
   initialState,
@@ -71,6 +79,9 @@ export const collectionSlice = createSlice({
       })
       .addCase(clearReduxStore.fulfilled, (state, action) => {
         state.addressDataList = action.payload;
+        state.collectionsList = action.payload;
+      })
+      .addCase(clearCollectionDay.fulfilled, (state, action) => {
         state.collectionsList = action.payload;
       });
   },

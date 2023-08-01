@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Input, Select, Button } from 'antd';
-import { getAddressData, getCollectionData, clearReduxStore } from '../redux/slice/collectionSlice';
+import { getAddressData, getCollectionData, clearReduxStore, clearCollectionDay } from '../redux/slice/collectionSlice';
 import { connect } from 'react-redux';
 
 const { Title, Text } = Typography;
 const P_GUID = 'FF93E12280E5471FE053A000A8C08BEB'; //taking statically
 
 const FindRubbishCollections = (props) => {
-  const { addressDataList, getAddressData, getCollectionData, clearReduxStore } = props;
+  const { addressDataList, getAddressData, getCollectionData, clearReduxStore, clearCollectionDay } = props;
   const [postcodeValue, setPostcodeValue] = useState('');
   const [addressOption, setAddressOption] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -18,6 +18,7 @@ const FindRubbishCollections = (props) => {
     setSelectedAddress(null);
     setAddressOption([]);
     setPostcodeValue(value);
+    clearCollectionDay([]);
   };
 
   //onSelect fetch data for collections
@@ -78,7 +79,15 @@ const FindRubbishCollections = (props) => {
         <Input className="rounded-0 mt-2" style={{ width: 125 }} maxLength={12} value={postcodeValue} onChange={(e) => handleInputChange(e.target.value)} />
         <div className="d-flex flex-column mt-3">
           <Text strong>Select an address</Text>
-          <Select value={selectedAddress} style={{ width: 300 }} options={addressOption} onChange={handleOnSelect} placeholder="Please select address" />
+          <Select
+            showSearch
+            value={selectedAddress}
+            style={{ width: 300 }}
+            options={addressOption}
+            filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+            onChange={handleOnSelect}
+            placeholder="Please select address"
+          />
         </div>
         <div className="mt-4">
           <Button className="p-0 " type="link" onClick={clearAllField}>
@@ -99,5 +108,6 @@ const mapDispatchToProps = {
   getAddressData,
   getCollectionData,
   clearReduxStore,
+  clearCollectionDay,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(FindRubbishCollections);
